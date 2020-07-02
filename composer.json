@@ -1,0 +1,28 @@
+{
+    "name": "femastudios/http-utils",
+    "description": "PHP collection of enums and basic utilities for HTTP",
+    "type": "library",
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "Mauro Molin",
+            "email": "molin.mauro@femastudios.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "femastudios/enums": "^1",
+        "php": "^7.3",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "com\\femastudios\\utils\\http\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "com\\femastudios\\utils\\http\\tests\\": "tests/"
+        }
+    }
+}
