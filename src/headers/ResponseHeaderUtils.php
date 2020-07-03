@@ -1,7 +1,7 @@
 <?php
     declare(strict_types=1);
 
-    namespace com\femastudios\utils\http;
+    namespace com\femastudios\utils\http\headers;
 
     /**
      * Utils class that contains methods useful for adding headers in the response.
@@ -61,7 +61,7 @@
         /**
          * @param string $header an header name
          * @return bool whether the given header name is present
-         * @see HeaderUtils::getAll()
+         * @see RequestHeaderUtils::getAll()
          */
         public static function has(string $header) : bool {
             return static::parseAll(static function (string $name) use ($header) : bool {
@@ -74,7 +74,7 @@
          * @param string $defaultValue a default value
          * @return string the value associated with the given header name, or the default value
          * @throws \LogicException if an header with the given name cannot be found and the default value is null
-         * @see HeaderUtils::opt()
+         * @see RequestHeaderUtils::opt()
          */
         public static function get(string $header, string $defaultValue = null) : string {
             $opt = static::opt($header);
@@ -93,7 +93,7 @@
          * @param string $header an header name (case insensitive)
          * @param string|null $defaultValue a default value
          * @return string|null the value associated with the given header name, or the default value
-         * @see HeaderUtils::getAll()
+         * @see RequestHeaderUtils::getAll()
          */
         public static function opt(string $header, ?string $defaultValue = null) : ?string {
             static::parseAll(static function (string $name, string $value) use ($header, &$ret) : bool {

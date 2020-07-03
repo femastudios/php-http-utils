@@ -1,14 +1,14 @@
 <?php
 	declare(strict_types=1);
 
-	namespace com\femastudios\utils\http;
+	namespace com\femastudios\utils\http\headers;
 
 	/**
 	 * Utils class that contains methods useful for dealing with request headers.
      *
      * @package com\femastudios\utils\http
 	 */
-	final class HeaderUtils {
+	final class RequestHeaderUtils {
 
 		private function __construct() {
 			throw new \LogicException();
@@ -75,7 +75,7 @@
 		}
 
 		/**
-		 * @return string[] parses the headers as described in the doc of {@link HeaderUtils::getAll()}
+		 * @return string[] parses the headers as described in the doc of {@link RequestHeaderUtils::getAll()}
 		 */
 		private static function loadAllHeaders() : array {
 			$headers = [];
