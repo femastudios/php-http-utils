@@ -12,4 +12,4 @@ Enumerators are declared using the [femastudios/enums](https://github.com/femast
 * `ResponseHeaderUtils`: contains functions to add and read headers to be sent, also with support of comma-separated values (that can be added in different calls)
 
 ## Exceptions
-* `HttpException`: class that wraps a `HttpResponseCode`, useful to bubble up HTTP response code that need to be handled at a higher level
+* `HttpException`: class that wraps an `HttpResponseCode` enum, useful to bubble up an HTTP response code that need to be handled at a higher level.
