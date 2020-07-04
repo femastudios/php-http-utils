@@ -12,15 +12,15 @@
         private static $reorderedFiles;
 
         /**
-         * The <code>$_FILES</code> array is made in not very user-friendly way: passing, for example
-         * <code>[info][avatar]</code> puts the array in the following condition:
+         * The <code>$_FILES</code> array is made in not very user-friendly way: passing, for example a parameter called
+         * <code>user[info][avatar]</code> puts the array in the following condition:
          * <code>
          * user[name][info][avatar]
          * user[size][info][avatar]
          * user[....][info][avatar]
          * </code>
-         * As you can see the each file parameter (name, size, etc) is grouped at the second level. So if we uploaded
-         * multiple files we would end up with all names grouped together, all sizes, etc.
+         * As you can see the each file parameter (name, size, etc) is grouped at the <b>second</b> level. Why? No one
+         * knows. So if we uploaded multiple files we would end up with all names grouped together, all sizes, etc.
          *
          * This method takes the <code>$_FILES</code> super-global and puts each file parameter at the last level,
          * so it transforms the above structure into the following:
@@ -29,7 +29,8 @@
          * user[info][avatar][size]
          * user[info][avatar][....]
          * </code>
-         * Doing things this way is easier because we can then address each uploaded file array by its parameter name.
+         * Doing things this way is easier because we can then address each uploaded file array by its parameter name
+         * and have an array containing the file info.
          *
          * Note that if the passed parameter names are not nested (instead of <code>user[info][avatar]</code> simply
          * <code>avatar</code> this method returns an array identical to <code>$_FILES</code>)
@@ -54,8 +55,8 @@
          *     },
          *     "type": {
          *       "info": {
-         *         "avatar": "image\/jpeg",
-         *         "logo": "image\jpeg"
+         *         "avatar": "image/jpeg",
+         *         "logo": "image/jpeg"
          *       }
          *     },
          *     "tmp_name": {
@@ -83,28 +84,29 @@
          * And finally the <code>json_encode(FilesUtils::getReorderedFiles())</code>:
          * <code>
          * {
-        *   "user": {
-        *     "info": {
-        *       "avatar": {
-        *         "name": "image1.jpg",
-        *         "type": "image\/jpeg",
-        *         "tmp_name": "C/tmp/phpB656.tmp",
-        *         "error": 0,
-        *         "size": 786492
-        *       },
-        *       "logo": {
-        *         "name": "image2.png",
-        *         "type": "image\/jpeg",
-        *         "tmp_name": "/tmp/phpB667.tmp",
-        *         "error": 0,
-        *         "size": 30045
-        *       }
-        *     }
-        *   }
-        * }
+         *   "user": {
+         *     "info": {
+         *       "avatar": {
+         *         "name": "image1.jpg",
+         *         "type": "image/jpeg",
+         *         "tmp_name": "C/tmp/phpB656.tmp",
+         *         "error": 0,
+         *         "size": 786492
+         *       },
+         *       "logo": {
+         *         "name": "image2.png",
+         *         "type": "image/jpeg",
+         *         "tmp_name": "/tmp/phpB667.tmp",
+         *         "error": 0,
+         *         "size": 30045
+         *       }
+         *     }
+         *   }
+         * }
          * </code>
          *
          * @return array the reordered <code>$_FILES</code> array
+         * @see FilesUtils::getUploadedFiles()
          */
         public static function getReorderedFiles() : array {
             if (self::$reorderedFiles === null) {
@@ -120,7 +122,7 @@
                                 self::$reorderedFiles[$firstLevelName] = [];
                             }
                             $newHierarchy = $hierarchy;
-                            self::putKeyAtEnd($newHierarchy, $fieldName);
+                            self::convertLeaves($newHierarchy, $fieldName);
                             self::$reorderedFiles[$firstLevelName] = array_merge_recursive(self::$reorderedFiles[$firstLevelName], $newHierarchy);
                         } else {
                             self::$reorderedFiles[$firstLevelName][$fieldName] = $hierarchy;
@@ -137,13 +139,86 @@
          * @param array $array
          * @param string $name
          */
-        private static function putKeyAtEnd(array &$array, string $name) : void {
+        private static function convertLeaves(array &$array, string $name) : void {
             foreach ($array as $k => &$child) {
                 if (\is_array($child)) {
-                    self::putKeyAtEnd($child, $name);
+                    self::convertLeaves($child, $name);
                 } else {
                     $array[$k] = [$name => $child];
                 }
+            }
+        }
+
+        private static $uploadedFiles;
+
+        /**
+         * Parses the array returned by {@link FilesUtils::getReorderedFiles()} and transforms each leaf array (i.e.
+         * each array containing name, tmp_name, etc.) to a closure that creates an {@link UploadedFile} or throw
+         * {@link UploadedFileException}, depending on the error property.
+         *
+         * Example usage:
+         * <code>
+         * $uploadedFiles = FileUtils::getUploadedFiles();
+         * $uploadedFiles['user']['info']['avatar'](); // <-- this will either return an UploadedFile or throw UploadedFileException
+         * </code>
+         * @return array array with the same structure as {@link FilesUtils::getReorderedFiles()} but a closure
+         * returning a {@link UploadedFile} as leaves
+         */
+        public static function getUploadedFiles() : array {
+            if (self::$uploadedFiles === null) {
+                self::$uploadedFiles = self::convertToUploadedFiles(self::getReorderedFiles());
+            }
+            return self::$uploadedFiles;
+        }
+
+        private static function convertToUploadedFiles(array $arr) {
+            if (UploadedFile::isValidFilesArray($arr)) {
+                return function () use ($arr) {
+                    return UploadedFile::fromFilesArray($arr);
+                };
+            } else {
+                $ret = [];
+                foreach ($arr as $k => $v) {
+                    $ret[$k] = is_array($v) ? self::convertToUploadedFiles($v) : $v;
+                }
+                return [];
+            }
+        }
+
+        /**
+         * Returns the {@link UploadedFile} at the specified path
+         * @param string ...$path the path of the param name (e.g. user[info][avatar])
+         * @return UploadedFile the {@link UploadedFile} instance, or null if the file with the given path does not exist
+         * @throws UploadedFileException if the uploaded file has an error
+         * @noinspection PhpDocRedundantThrowsInspection because of closure
+         */
+        public static function optUploadedFile(string ...$path) : ?UploadedFile {
+            if (\count($path) === 0) {
+                throw new \DomainException('Path must have at least one entry');
+            }
+            $ret = self::getUploadedFiles();
+            foreach ($path as $item) {
+                $ret = $ret[$item] ?? null;
+            }
+            if ($ret !== null) {
+                $ret = $ret();
+            }
+            return $ret;
+        }
+
+        /**
+         * Returns the {@link UploadedFile} at the specified path
+         * @param string ...$path the path of the param name (e.g. user[info][avatar])
+         * @return UploadedFile the {@link UploadedFile} instance
+         * @throws UploadedFileException if the uploaded file has an error
+         * @throws \LogicException if the file with the given path does not exist
+         */
+        public static function getUploadedFile(string ...$path) : UploadedFile {
+            $ret = self::optUploadedFile(...$path);
+            if ($ret === null) {
+                throw new \LogicException('Unable to find uploaded file under path ' . implode('/', $path));
+            } else {
+                return $ret;
             }
         }
     }
