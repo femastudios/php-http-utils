@@ -82,16 +82,12 @@
          * @throws \LogicException if an header with the given name cannot be found and the default value is null
          * @see RequestHeaderUtils::opt()
          */
-        public static function get(string $header, string $defaultValue = null) : string {
-            $opt = static::opt($header);
+        public static function get(string $header, ?string $defaultValue = null) : string {
+            $opt = static::opt($header, $defaultValue);
             if ($opt !== null) {
                 return $opt;
             } else {
-                if ($defaultValue === null) {
-                    throw new \LogicException("Header $header not found in response headers");
-                } else {
-                    return $defaultValue;
-                }
+                throw new \LogicException("Header $header not found in response headers");
             }
         }
 
@@ -176,8 +172,8 @@
         /**
          * Similar to {@link ResponseHeaderUtils::opt()}, but parses the value as a comma separated value and returns an array
          * @param string $header the header name
-         * @param array|null $defaultValue the default value
-         * @return array|null an array containing the comma separated values, or null
+         * @param string[]|null $defaultValue the default value (null as default)
+         * @return string[]|null an array containing the comma separated values, or the default value
          */
         public static function optCsv(string $header, ?array $defaultValue = null) : ?array {
             return static::parseCsv(static::opt($header)) ?? $defaultValue;
@@ -186,11 +182,17 @@
         /**
          * Similar to {@link ResponseHeaderUtils::get()}, but parses the value as a comma separated value and returns an array
          * @param string $header the header name
-         * @return array an array containing the comma separated values
-         * @throws \LogicException if an header with the given name cannot be found
+         * @param string[] $defaultValue a default value
+         * @return string[] an array containing the comma separated values or the default value
+         * @throws \LogicException if an header with the given name cannot be found and the default value is null
          */
-        public static function getCsv(string $header) : array {
-            return static::parseCsv(static::get($header));
+        public static function getCsv(string $header, ?array $defaultValue = null) : array {
+            $opt = self::optCsv($header, $defaultValue);
+            if($opt !== null) {
+                return $opt;
+            } else {
+                throw new \LogicException("Header $header not found in response headers");
+            }
         }
 
         /**
@@ -225,7 +227,7 @@
          * @param string $header the header name
          * @param bool $caseSensitive whether to use case sensitive or insensitive comparision
          * @param string ...$values the values to remove. If none passed, the function does nothing.
-         * @return array an associative array of removed headers
+         * @return string[] an array of actually removed headers (with duplicates)
          * @throws \LogicException if headers have already been sent
          */
         public static function removeCsv(string $header, bool $caseSensitive, string ...$values) : array {
@@ -242,7 +244,7 @@
                         }
                     }
                     if ($found) {
-                        $ret[$k] = $values;
+                        $ret[] = $value;
                         unset($opt[$k]);
                     }
                 }
