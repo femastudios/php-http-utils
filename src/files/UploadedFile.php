@@ -32,7 +32,7 @@
         /**
          * @return string the mime type of the file (e.g. "image/jpeg")
          */
-        public function getType() : string {
+        public function getType() : ?string {
             return $this->type;
         }
 
