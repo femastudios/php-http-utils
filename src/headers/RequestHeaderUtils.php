@@ -79,15 +79,15 @@
          * @return string[] returns an associative array of header key => value. the-key-is-in-lower-case-like-this
          */
         public static function getAllLowerCase() : array {
-            if (static::$headers === null) {
+            if (static::$headersLower === null) {
                 $all = static::getAll();
                 $lower = [];
                 foreach ($all as $k => $v) {
                     $lower[strtolower($k)] = $v;
                 }
-                static::$headers = $lower;
+                static::$headersLower = $lower;
             }
-            return static::$headers;
+            return static::$headersLower;
         }
 
         /**
