@@ -1,21 +1,21 @@
 <?php
-	declare(strict_types=1);
+    declare(strict_types=1);
 
-	namespace com\femastudios\utils\http;
+    namespace com\femastudios\utils\http;
 
-	/**
-	 * An exception that contains an {@link HttpResponseCode}.
+    /**
+     * An exception that contains an {@link HttpResponseCode}.
      *
      * Can be useful if a piece of code knows the type of HTTP failure the page has got to have and needs to propagate
      * this information up in the call stack.
      *
      * This class implements the {@link \JsonSerializable} interface.
      *
-	 * @package com\femastudios\utils\http
-	 */
-	final class HttpException extends \RuntimeException implements \JsonSerializable {
+     * @package com\femastudios\utils\http
+     */
+    final class HttpException extends \RuntimeException implements \JsonSerializable {
 
-		private $httpCode, $exceptionId, $extras;
+        private $httpCode, $exceptionId, $extras;
 
         /**
          * @param string|null $message the message of the exception. If null the default message of the {@link HttpResponseCode} is used.
@@ -24,37 +24,37 @@
          * @param array|null $extras a map that will be added under the "extras" key in the JSON serialization. Can be null.
          * @param \Throwable|null $cause the cause exception. Can be null.
          */
-		public function __construct(?string $message = null, ?HttpResponseCode $httpCode = null, ?string $exceptionId = null, ?array $extras = null, ?\Throwable $cause = null) {
-			if ($httpCode === null) {
-				$httpCode = HttpResponseCode::INTERNAL_SERVER_ERROR();
-			}
-			if($message === null) {
-			    $message = $httpCode->getMessage();
+        public function __construct(?string $message = null, ?HttpResponseCode $httpCode = null, ?string $exceptionId = null, ?array $extras = null, ?\Throwable $cause = null) {
+            if ($httpCode === null) {
+                $httpCode = HttpResponseCode::INTERNAL_SERVER_ERROR();
             }
-			parent::__construct($message, $httpCode->getCode(), $cause);
-			$this->httpCode = $httpCode;
-			$this->exceptionId = $exceptionId;
-			$this->extras = $extras;
-		}
+            if ($message === null) {
+                $message = $httpCode->getMessage();
+            }
+            parent::__construct($message, $httpCode->getCode(), $cause);
+            $this->httpCode = $httpCode;
+            $this->exceptionId = $exceptionId;
+            $this->extras = $extras;
+        }
 
-		public function getExceptionId() : ?string {
-			return $this->exceptionId;
-		}
+        public function getExceptionId() : ?string {
+            return $this->exceptionId;
+        }
 
-		public function getHttpCode() : HttpResponseCode {
-			return $this->httpCode;
-		}
+        public function getHttpCode() : HttpResponseCode {
+            return $this->httpCode;
+        }
 
-		public function getExtras() : ?array {
-			return $this->extras;
-		}
+        public function getExtras() : ?array {
+            return $this->extras;
+        }
 
-		public function jsonSerialize() {
-			return [
-				'code'        => $this->getCode(),
-				'message'     => $this->getMessage(),
-				'exceptionId' => $this->getExceptionId(),
-				'extras'      => (object)$this->extras,
-			];
-		}
-	}
+        public function jsonSerialize() {
+            return [
+                'code'         => $this->getCode(),
+                'message'      => $this->getMessage(),
+                'exception_id' => $this->getExceptionId(),
+                'extras'       => (object)$this->extras,
+            ];
+        }
+    }
