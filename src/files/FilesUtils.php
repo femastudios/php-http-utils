@@ -181,8 +181,23 @@
                 foreach ($arr as $k => $v) {
                     $ret[$k] = is_array($v) ? self::convertToUploadedFiles($v) : $v;
                 }
-                return [];
+                return $ret;
             }
+        }
+
+        private static function uploadedFile(string ...$path) : ?callable {
+            if (\count($path) === 0) {
+                throw new \DomainException('Path must have at least one entry');
+            }
+            $ret = self::getUploadedFiles();
+            foreach ($path as $item) {
+                if (!is_array($ret)) {
+                    return null;
+                } else {
+                    $ret = $ret[$item] ?? null;
+                }
+            }
+            return $ret;
         }
 
         /**
@@ -193,17 +208,8 @@
          * @noinspection PhpDocRedundantThrowsInspection because of closure
          */
         public static function optUploadedFile(string ...$path) : ?UploadedFile {
-            if (\count($path) === 0) {
-                throw new \DomainException('Path must have at least one entry');
-            }
-            $ret = self::getUploadedFiles();
-            foreach ($path as $item) {
-                $ret = $ret[$item] ?? null;
-            }
-            if ($ret !== null) {
-                $ret = $ret();
-            }
-            return $ret;
+            $callable = self::uploadedFile(...$path);
+            return $callable === null ? null : $callable();
         }
 
         /**
@@ -220,5 +226,9 @@
             } else {
                 return $ret;
             }
+        }
+
+        public static function hasUploadedFile(string ...$path) : bool {
+            return self::uploadedFile(...$path) !== null;
         }
     }
