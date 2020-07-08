@@ -4,15 +4,23 @@ This library is a very simple collection of a few classes to facilitate handling
 ## Core
 Very base classes. Enumerators are declared using the [femastudios/enums](https://github.com/femastudios/enums) library.
 
-* `HttpRequestMethod`: enumerator that defines the common request methods (`GET`, `POST`, etc.). They also have some properties (e.g. is cachable)
-* `HttpResponseCode`: enumerator that defines the common response codes (`SUCCESS`, `NOT_FOUND`, `FORBIDDEN`, etc.). They have the numerical code and the standard message.
-* `HttpResponseCodeType`: enumerator that defines the type of a response code (i.e. `INFORMATIONAL`, `SUCCESSFUL`, `REDIRECTION`, `CLIENT_ERROR` and `SERVER_ERROR`)
-* `HttpException`: exception class that wraps an `HttpResponseCode` enum, useful to bubble up an HTTP response code that need to be handled at a higher level.
+* [`HttpRequestMethod`](https://github.com/femastudios/http-utils/blob/master/src/HttpRequestMethod.php): enumerator that defines the common request methods (`GET`, `POST`, etc.). They also have some properties (e.g. is cachable)
+* [`HttpResponseCode`](https://github.com/femastudios/http-utils/blob/master/src/HttpResponseCode.php): enumerator that defines the common response codes (`SUCCESS`, `NOT_FOUND`, `FORBIDDEN`, etc.). They have the numerical code and the standard message.
+* [`HttpResponseCodeType`](https://github.com/femastudios/http-utils/blob/master/src/HttpResponseCodeType.php): enumerator that defines the type of a response code (i.e. `INFORMATIONAL`, `SUCCESSFUL`, `REDIRECTION`, `CLIENT_ERROR` and `SERVER_ERROR`)
+* [`HttpException`](https://github.com/femastudios/http-utils/blob/master/src/HttpException.php): exception class that wraps an `HttpResponseCode` enum, useful to bubble up an HTTP response code that need to be handled at a higher level.
     
 ## Header utils
 These utilities allow to better handle request and response HTTP headers.
-* `RequestHeaderUtils`: contains functions to read the headers sent by the requester (even in a context that does not define `getallheaders()`, like FPM).
-* `ResponseHeaderUtils`: contains functions to add and read headers to be sent, also with support of comma-separated values (that can be added in different calls).
+* [`RequestHeaderUtils`](https://github.com/femastudios/http-utils/blob/master/src/headers/RequestHeaderUtils.php): contains functions to read the headers sent by the requester (even in a context that does not define `getallheaders()`, like FPM).
+* [`ResponseHeaderUtils`](https://github.com/femastudios/http-utils/blob/master/src/headers/ResponseHeaderUtils.php): contains functions to add and read headers to be sent, also with support of comma-separated values (that can be added in different calls).
+
+Example usage:
+```php
+RequestHeaderUtils::get('Content-Type', 'none'); // Get the header, or default value
+
+ResponseHeaderUtils::put('Content-Type', 'application/json'); // Put the header or throws if they have already been sent
+ResponseHeaderUtils::addCsv('Vary', 'Origin'); // Treats the header value as a comma-separated value and adds "Origin"
+```
 
 ## Uploaded files utils
 Here we have utilities that help handling file uploads. The main reason for this utility is:
