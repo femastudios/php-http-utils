@@ -1,15 +1,34 @@
 # http-utils
 This library is a very simple collection of a few classes to facilitate handling HTTP requests.
 
-## Enumerators
-Enumerators are declared using the [femastudios/enums](https://github.com/femastudios/enums) library.
-* `HttpRequestMethod`: defines the common request methods (`GET`, `POST`, etc.). They also have some properties (e.g. is cachable)
-* `HttpResponseCode`: defines the common response codes (`SUCCESS`, `NOT_FOUND`, `FORBIDDEN`, etc.). They have the numerical code and the standard message.
-* `HttpResponseCodeType`: defines the type of a response code (i.e. `INFORMATIONAL`, `SUCCESSFUL`, `REDIRECTION`, `CLIENT_ERROR` and `SERVER_ERROR`)
+## Core
+Very base classes. Enumerators are declared using the [femastudios/enums](https://github.com/femastudios/enums) library.
 
-## Utility classes
-* `HeaderUtils`: contains functions to read the headers sent by the requester (even in a context that does not define `getallheaders()`, like FPM)
-* `ResponseHeaderUtils`: contains functions to add and read headers to be sent, also with support of comma-separated values (that can be added in different calls)
+* `HttpRequestMethod`: enumerator that defines the common request methods (`GET`, `POST`, etc.). They also have some properties (e.g. is cachable)
+* `HttpResponseCode`: enumerator that defines the common response codes (`SUCCESS`, `NOT_FOUND`, `FORBIDDEN`, etc.). They have the numerical code and the standard message.
+* `HttpResponseCodeType`: enumerator that defines the type of a response code (i.e. `INFORMATIONAL`, `SUCCESSFUL`, `REDIRECTION`, `CLIENT_ERROR` and `SERVER_ERROR`)
+* `HttpException`: exception class that wraps an `HttpResponseCode` enum, useful to bubble up an HTTP response code that need to be handled at a higher level.
+    
+## Header utils
+These utilities allow to better handle request and response HTTP headers.
+* `RequestHeaderUtils`: contains functions to read the headers sent by the requester (even in a context that does not define `getallheaders()`, like FPM).
+* `ResponseHeaderUtils`: contains functions to add and read headers to be sent, also with support of comma-separated values (that can be added in different calls).
 
-## Exceptions
-* `HttpException`: class that wraps an `HttpResponseCode` enum, useful to bubble up an HTTP response code that need to be handled at a higher level.
+## Uploaded files utils
+Here we have utilities that help handling file uploads. The main reason for this utility is:
+1. Handle the errors with an exception;
+2. Untangle the mess that is the `$_FILES` array when the param name is nested (e.g. `user[info][avatar]`).
+For more on this see the doc of [`UploadedFilesUtils::getReorderedFiles()`](https://github.com/femastudios/http-utils/blob/master/src/files/UploadedFilesUtils.php#L14-L110).
+
+The classes are:
+
+* `UploadedFile`: class that contains the info on a single uploaded file (e.g. name, size, etc.)
+* `UploadedFileException`: exception thrown when an error uploading a file is detected. It cotains the error code and a description of the error as message.
+* `UploadedFilesUtils`: contains static functions to retrieve the uploaded files
+
+Example usage:
+```php
+$uf = UploadedFilesUtils::getUploadedFile('user', 'info', 'avatar'); // Returns an UploadedFile or throw UploadedFileException
+$uf->getTmpName(); // Return the file temp filename (e.g. /tmp/php1324.tmp)
+``` 
+ 
