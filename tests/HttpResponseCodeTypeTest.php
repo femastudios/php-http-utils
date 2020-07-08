@@ -9,18 +9,17 @@
 
     final class HttpResponseCodeTypeTest extends TestCase {
 
-        public function testAcceptsCode() {
+        public function testAcceptsCode() : void {
             self::assertTrue(HttpResponseCodeType::CLIENT_ERROR()->acceptsCode(404));
             self::assertFalse(HttpResponseCodeType::CLIENT_ERROR()->acceptsCode(500));
         }
 
-        public function testAccepts() {
+        public function testAccepts() : void {
             self::assertTrue(HttpResponseCodeType::INFORMATIONAL()->accepts(HttpResponseCode::CONTINUE()));
             self::assertFalse(HttpResponseCodeType::REDIRECTION()->accepts(HttpResponseCode::NOT_FOUND()));
-
         }
 
-        public function testGetAllCodes() {
+        public function testGetAllCodes() : void {
             $type = HttpResponseCodeType::REDIRECTION();
             $codes = $type->getAllCodes();
             foreach ($codes as $code) {
@@ -32,5 +31,4 @@
                 }
             }
         }
-
     }

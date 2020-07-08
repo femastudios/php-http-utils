@@ -8,7 +8,8 @@
     use PHPUnit\Framework\TestCase;
 
     final class UploadedFileTest extends TestCase {
-        public function testIsValidFilesArray() {
+
+        public function testIsValidFilesArray() : void {
             $arr = [
                 'name' => 'hello.jpg',
                 'error' => UPLOAD_ERR_OK,
@@ -43,7 +44,7 @@
         }
 
         /** @throws UploadedFileException */
-        public function testFromFilesArray() {
+        public function testFromFilesArray() : void {
             $uf = UploadedFile::fromFilesArray([
                 'name' => 'hello.jpg',
                 'error' => UPLOAD_ERR_OK,
@@ -58,7 +59,7 @@
         }
 
         /** @throws UploadedFileException */
-        public function testFromFilesArrayWrongArray() {
+        public function testFromFilesArrayWrongArray() : void {
             $this->expectException(\DomainException::class);
             UploadedFile::fromFilesArray([
                 'name' => 132,
@@ -66,7 +67,7 @@
             ]);
         }
 
-        public function testFromFilesArrayError() {
+        public function testFromFilesArrayError() : void {
             $this->expectException(UploadedFileException::class);
             $this->expectExceptionCode(UPLOAD_ERR_CANT_WRITE);
             UploadedFile::fromFilesArray([

@@ -52,7 +52,7 @@
             ];
         }
 
-        public function testGetReorderedFiles() {
+        public function testGetReorderedFiles() : void {
             self::assertSame([
                 'user' => [
                     'info'      => [
@@ -82,7 +82,7 @@
             ], FilesUtils::getReorderedFiles());
         }
 
-        private static function checkAvatar($avatar) {
+        private static function checkAvatar($avatar) : void {
             self::assertInstanceOf(UploadedFile::class, $avatar);
             self::assertSame($avatar->getName(), 'photo.jpg');
             self::assertSame($avatar->getType(), 'image/jpeg');
@@ -90,7 +90,7 @@
             self::assertSame($avatar->getSize(), 1354716);
         }
 
-        private static function checkLogo($logo) {
+        private static function checkLogo($logo) : void {
             self::assertInstanceOf(UploadedFile::class, $logo);
             self::assertSame($logo->getName(), 'logo.png',);
             self::assertSame($logo->getType(), 'image/png');
@@ -98,7 +98,7 @@
             self::assertSame($logo->getSize(), 354987);
         }
 
-        public function testGetUploadedFiles() {
+        public function testGetUploadedFiles() : void {
             $uploadedFiles = FilesUtils::getUploadedFiles();
             self::assertIsCallable($uploadedFiles['user']['info']['avatar']);
             self::assertIsCallable($uploadedFiles['user']['logo']);
@@ -118,7 +118,7 @@
         }
 
         /** @throws UploadedFileException */
-        public function testOptUploadedFile() {
+        public function testOptUploadedFile() : void {
             self::checkAvatar(FilesUtils::optUploadedFile('user', 'info', 'avatar'));
             self::checkLogo(FilesUtils::optUploadedFile('user', 'logo'));
 
@@ -131,7 +131,7 @@
         }
 
         /** @throws UploadedFileException */
-        public function testGetUploadedFile() {
+        public function testGetUploadedFile() : void {
             self::checkAvatar(FilesUtils::getUploadedFile('user', 'info', 'avatar'));
             self::checkLogo(FilesUtils::getUploadedFile('user', 'logo'));
 
@@ -141,12 +141,12 @@
         }
 
         /** @throws UploadedFileException */
-        public function testGetUploadedFileNotFound() {
+        public function testGetUploadedFileNotFound() : void {
             $this->expectException(\LogicException::class);
             FilesUtils::getUploadedFile('user', 'hello');
         }
 
-        public function testHasUploadedFile() {
+        public function testHasUploadedFile() : void {
             self::assertTrue(FilesUtils::hasUploadedFile('user', 'info', 'avatar'));
             self::assertTrue(FilesUtils::hasUploadedFile('user', 'logo'));
             self::assertTrue(FilesUtils::hasUploadedFile('user', 'signature'));

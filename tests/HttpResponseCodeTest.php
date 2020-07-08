@@ -13,7 +13,7 @@
             self::assertSame(HttpResponseCode::NOT_FOUND(), HttpResponseCode::fromCode(404));
         }
 
-        public function testType() {
+        public function testType() : void {
             self::assertSame(HttpResponseCodeType::INFORMATIONAL(), HttpResponseCode::CONTINUE()->getType());
 
             self::assertSame(HttpResponseCodeType::SUCCESSFUL(), HttpResponseCode::OK()->getType());
@@ -29,7 +29,7 @@
             self::assertSame(HttpResponseCodeType::SERVER_ERROR(), HttpResponseCode::BAD_GATEWAY()->getType());
         }
 
-        public function testInfo()  {
+        public function testInfo() : void  {
             self::assertSame(200, HttpResponseCode::OK()->getCode());
             self::assertSame('OK', HttpResponseCode::OK()->getMessage());
             self::assertSame('200 OK', HttpResponseCode::OK()->getCodeAndMessage());
@@ -43,7 +43,7 @@
             self::assertSame('502 Bad Gateway', HttpResponseCode::BAD_GATEWAY()->getCodeAndMessage());
         }
 
-        public function testHttpException() {
+        public function testHttpException() : void {
             $code = HttpResponseCode::NOT_FOUND();
             $message = 'User not found';
             $exceptionId = 'user_not_found';
