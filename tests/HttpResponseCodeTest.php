@@ -7,7 +7,7 @@
     use com\femastudios\utils\http\HttpResponseCodeType;
     use PHPUnit\Framework\TestCase;
 
-    class HttpResponseCodeTest extends TestCase {
+    final class HttpResponseCodeTest extends TestCase {
 
         public function testFromCode() : void {
             self::assertSame(HttpResponseCode::NOT_FOUND(), HttpResponseCode::fromCode(404));

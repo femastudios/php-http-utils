@@ -7,7 +7,7 @@
     use com\femastudios\utils\http\HttpResponseCodeType;
     use PHPUnit\Framework\TestCase;
 
-    class HttpResponseCodeTypeTest extends TestCase {
+    final class HttpResponseCodeTypeTest extends TestCase {
 
         public function testAcceptsCode() {
             self::assertTrue(HttpResponseCodeType::CLIENT_ERROR()->acceptsCode(404));
