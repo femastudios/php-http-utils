@@ -54,6 +54,7 @@
                 'code'         => $this->getCode(),
                 'message'      => $this->getMessage(),
                 'exception_id' => $this->getExceptionId(),
+                //Casted to object because in case of empty array it must remain an empty object ({})
                 'extras'       => (object)$this->extras,
             ];
         }
