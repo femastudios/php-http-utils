@@ -3,7 +3,7 @@
 
     namespace com\femastudios\utils\http\files;
 
-    final class FilesUtils {
+    final class UploadedFilesUtils {
 
         private function __construct() {
             throw new \LogicException();
@@ -81,7 +81,7 @@
          * }
          * </code>
          *
-         * And finally the <code>json_encode(FilesUtils::getReorderedFiles())</code>:
+         * And finally the <code>json_encode(UploadedFilesUtils::getReorderedFiles())</code>:
          * <code>
          * {
          *   "user": {
@@ -106,7 +106,7 @@
          * </code>
          *
          * @return array the reordered <code>$_FILES</code> array
-         * @see FilesUtils::getUploadedFiles()
+         * @see UploadedFilesUtils::getUploadedFiles()
          */
         public static function getReorderedFiles() : array {
             if (self::$reorderedFiles === null) {
@@ -152,7 +152,7 @@
         private static $uploadedFiles;
 
         /**
-         * Parses the array returned by {@link FilesUtils::getReorderedFiles()} and transforms each leaf array (i.e.
+         * Parses the array returned by {@link UploadedFilesUtils::getReorderedFiles()} and transforms each leaf array (i.e.
          * each array containing name, tmp_name, etc.) to a closure that creates an {@link UploadedFile} or throw
          * {@link UploadedFileException}, depending on the error property.
          *
@@ -161,7 +161,7 @@
          * $uploadedFiles = FileUtils::getUploadedFiles();
          * $uploadedFiles['user']['info']['avatar'](); // <-- this will either return an UploadedFile or throw UploadedFileException
          * </code>
-         * @return array array with the same structure as {@link FilesUtils::getReorderedFiles()} but a closure
+         * @return array array with the same structure as {@link UploadedFilesUtils::getReorderedFiles()} but a closure
          * returning a {@link UploadedFile} as leaves
          */
         public static function getUploadedFiles() : array {

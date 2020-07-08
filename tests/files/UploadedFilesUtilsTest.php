@@ -3,12 +3,12 @@
 
     namespace com\femastudios\utils\http\tests\files;
 
-    use com\femastudios\utils\http\files\FilesUtils;
+    use com\femastudios\utils\http\files\UploadedFilesUtils;
     use com\femastudios\utils\http\files\UploadedFile;
     use com\femastudios\utils\http\files\UploadedFileException;
     use PHPUnit\Framework\TestCase;
 
-    final class FilesUtilsTest extends TestCase {
+    final class UploadedFilesUtilsTest extends TestCase {
 
         protected function setUp() : void {
             $_FILES = [
@@ -79,7 +79,7 @@
                         'size'     => 18596478,
                     ],
                 ],
-            ], FilesUtils::getReorderedFiles());
+            ], UploadedFilesUtils::getReorderedFiles());
         }
 
         private static function checkAvatar($avatar) : void {
@@ -99,7 +99,7 @@
         }
 
         public function testGetUploadedFiles() : void {
-            $uploadedFiles = FilesUtils::getUploadedFiles();
+            $uploadedFiles = UploadedFilesUtils::getUploadedFiles();
             self::assertIsCallable($uploadedFiles['user']['info']['avatar']);
             self::assertIsCallable($uploadedFiles['user']['logo']);
             self::assertIsCallable($uploadedFiles['user']['signature']);
@@ -119,40 +119,40 @@
 
         /** @throws UploadedFileException */
         public function testOptUploadedFile() : void {
-            self::checkAvatar(FilesUtils::optUploadedFile('user', 'info', 'avatar'));
-            self::checkLogo(FilesUtils::optUploadedFile('user', 'logo'));
+            self::checkAvatar(UploadedFilesUtils::optUploadedFile('user', 'info', 'avatar'));
+            self::checkLogo(UploadedFilesUtils::optUploadedFile('user', 'logo'));
 
             $this->expectException(UploadedFileException::class);
             $this->expectExceptionCode(UPLOAD_ERR_FORM_SIZE);
-            FilesUtils::optUploadedFile('user', 'signature');
+            UploadedFilesUtils::optUploadedFile('user', 'signature');
 
-            self::assertNull(FilesUtils::optUploadedFile('user', 'hello'));
-            self::assertNull(FilesUtils::optUploadedFile('user', 'signature', 'type'));
+            self::assertNull(UploadedFilesUtils::optUploadedFile('user', 'hello'));
+            self::assertNull(UploadedFilesUtils::optUploadedFile('user', 'signature', 'type'));
         }
 
         /** @throws UploadedFileException */
         public function testGetUploadedFile() : void {
-            self::checkAvatar(FilesUtils::getUploadedFile('user', 'info', 'avatar'));
-            self::checkLogo(FilesUtils::getUploadedFile('user', 'logo'));
+            self::checkAvatar(UploadedFilesUtils::getUploadedFile('user', 'info', 'avatar'));
+            self::checkLogo(UploadedFilesUtils::getUploadedFile('user', 'logo'));
 
             $this->expectException(UploadedFileException::class);
             $this->expectExceptionCode(UPLOAD_ERR_FORM_SIZE);
-            FilesUtils::getUploadedFile('user', 'signature');
+            UploadedFilesUtils::getUploadedFile('user', 'signature');
         }
 
         /** @throws UploadedFileException */
         public function testGetUploadedFileNotFound() : void {
             $this->expectException(\LogicException::class);
-            FilesUtils::getUploadedFile('user', 'hello');
+            UploadedFilesUtils::getUploadedFile('user', 'hello');
         }
 
         public function testHasUploadedFile() : void {
-            self::assertTrue(FilesUtils::hasUploadedFile('user', 'info', 'avatar'));
-            self::assertTrue(FilesUtils::hasUploadedFile('user', 'logo'));
-            self::assertTrue(FilesUtils::hasUploadedFile('user', 'signature'));
-            self::assertFalse(FilesUtils::hasUploadedFile('user', 'hello'));
-            self::assertFalse(FilesUtils::hasUploadedFile('123'));
-            self::assertFalse(FilesUtils::hasUploadedFile('user', 'info', 'avatar', 'name'));
+            self::assertTrue(UploadedFilesUtils::hasUploadedFile('user', 'info', 'avatar'));
+            self::assertTrue(UploadedFilesUtils::hasUploadedFile('user', 'logo'));
+            self::assertTrue(UploadedFilesUtils::hasUploadedFile('user', 'signature'));
+            self::assertFalse(UploadedFilesUtils::hasUploadedFile('user', 'hello'));
+            self::assertFalse(UploadedFilesUtils::hasUploadedFile('123'));
+            self::assertFalse(UploadedFilesUtils::hasUploadedFile('user', 'info', 'avatar', 'name'));
         }
 
 

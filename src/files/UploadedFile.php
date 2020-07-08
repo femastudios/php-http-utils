@@ -62,7 +62,7 @@
         /**
          * Creates a new {@link UploadedFile} from an array containing the following params: name, size, tmp_name, error
          * and type. Only type is optional. The array can be obtained from the <code>$_FILES</code> super-global, or
-         * by calling {@link FilesUtils::getReorderedFiles()} if the parameter name contains nesting. (See function doc
+         * by calling {@link UploadedFilesUtils::getReorderedFiles()} if the parameter name contains nesting. (See function doc
          * for better explanation.
          *
          * @param array $arr the array with the described keys. Unknown keys are ignored
