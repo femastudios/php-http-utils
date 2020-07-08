@@ -20,7 +20,13 @@
          * @return boolean true if any callable halted the computation, false otherwise
          */
         private static function parseAll(callable $callable) : bool {
-            foreach (headers_list() as $header) {
+            if (php_sapi_name() === 'cli' && function_exists('xdebug_get_headers')) {
+                /** @noinspection PhpComposerExtensionStubsInspection */
+                $headers = xdebug_get_headers();
+            } else {
+                $headers = headers_list();
+            }
+            foreach ($headers as $header) {
                 $pos = strpos($header, ':');
                 if ($pos === false) {
                     // Unable to find colon in set header
@@ -126,6 +132,7 @@
          */
         public static function remove(string $header) : void {
             self::checkSent();
+            header("$header: "); // Sometimes header_remove doesn't work
             header_remove($header);
         }
 
@@ -155,7 +162,7 @@
          * @throws \LogicException if headers have already been sent
          */
         public static function concat(string $header, string $value, string $glue = '') : void {
-            $opt = static::get($header);
+            $opt = static::opt($header);
             if ($opt !== null) {
                 $value = $opt . $glue . $value;
             }
