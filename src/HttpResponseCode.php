@@ -205,6 +205,16 @@
             return $this->code . ' ' . $this->message;
         }
 
+        public static function fromCode(int $code) : HttpResponseCode {
+            foreach (self::getAll() as $rc) {
+                /** @var HttpResponseCode $rc */
+                if($rc->getCode() === $code) {
+                    return $rc;
+                }
+            }
+            throw new \DomainException("Invalid HTTP response code $code");
+        }
+
         public function httpException(?string $message = null, ?string $exceptionId = null, ?array $extras = null, ?\Throwable $cause = null) : HttpException {
             if ($message === null) {
                 $message = $this->message;
