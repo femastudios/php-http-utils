@@ -82,6 +82,8 @@
      * @method static HttpResponseCode NOT_EXTENDED()
      * @method static HttpResponseCode NETWORK_AUTHENTICATION_REQUIRED()
      *
+     * @method static HttpResponseCode[] getAll()
+     *
      * @package com\femastudios\utils\http
      */
     final class HttpResponseCode extends ConstEnum {

@@ -20,6 +20,8 @@
      * @method static HttpRequestMethod TRACE()
      * @method static HttpRequestMethod PATCH()
      *
+     * @method static HttpRequestMethod[] getAll()
+     *
  	 * @package com\femastudios\utils\http
      */
     final class HttpRequestMethod extends ConstEnum {

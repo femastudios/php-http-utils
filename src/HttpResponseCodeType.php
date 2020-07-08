@@ -26,6 +26,8 @@
 	 * @method static HttpResponseCodeType CLIENT_ERROR()
 	 * @method static HttpResponseCodeType SERVER_ERROR()
      *
+     * @method static HttpResponseCodeType[] getAll()
+     *
      * @package com\femastudios\utils\http
 	 */
 	final class HttpResponseCodeType extends ConstEnum {
