@@ -70,7 +70,7 @@
          * @return bool true if the given response code is of this type
          */
         public function acceptsCode(int $code) : bool {
-            return $code % 100 === $this->hundreds;
+            return intdiv($code, 100) === $this->hundreds;
         }
 
 	}
