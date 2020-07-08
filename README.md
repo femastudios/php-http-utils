@@ -30,9 +30,9 @@ For more on this see the doc of [`UploadedFilesUtils::getReorderedFiles()`](http
 
 The classes are:
 
-* `UploadedFile`: class that contains the info on a single uploaded file (e.g. name, size, etc.)
-* `UploadedFileException`: exception thrown when an error uploading a file is detected. It cotains the error code and a description of the error as message.
-* `UploadedFilesUtils`: contains static functions to retrieve the uploaded files
+* [`UploadedFile`](https://github.com/femastudios/http-utils/blob/master/src/files/UploadedFile.php): class that contains the info on a single uploaded file (e.g. name, size, etc.)
+* [`UploadedFileException`](https://github.com/femastudios/http-utils/blob/master/src/files/UploadedFileException.php): exception thrown when an error uploading a file is detected. It cotains the error code and a description of the error as message.
+* [`UploadedFilesUtils`](https://github.com/femastudios/http-utils/blob/master/src/files/UploadedFilesUtils.php): contains static functions to retrieve the uploaded files
 
 Example usage:
 ```php
