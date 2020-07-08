@@ -8,7 +8,7 @@
     use com\femastudios\utils\http\files\UploadedFileException;
     use PHPUnit\Framework\TestCase;
 
-    class FilesUtilsTest extends TestCase {
+    final class FilesUtilsTest extends TestCase {
 
         protected function setUp() : void {
             $_FILES = [

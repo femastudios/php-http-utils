@@ -7,7 +7,7 @@
     use com\femastudios\utils\http\files\UploadedFileException;
     use PHPUnit\Framework\TestCase;
 
-    class UploadedFileTest extends TestCase {
+    final class UploadedFileTest extends TestCase {
         public function testIsValidFilesArray() {
             $arr = [
                 'name' => 'hello.jpg',
