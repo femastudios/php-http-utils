@@ -34,7 +34,7 @@
 			parent::__construct($message, $httpCode->getCode(), $cause);
 			$this->httpCode = $httpCode;
 			$this->exceptionId = $exceptionId;
-			$this->extras = $extras === null || \count($extras) === 0 ? null : $extras;
+			$this->extras = $extras;
 		}
 
 		public function getExceptionId() : ?string {
