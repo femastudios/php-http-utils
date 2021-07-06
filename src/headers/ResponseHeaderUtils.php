@@ -21,7 +21,6 @@
          */
         private static function parseAll(callable $callable) : bool {
             if (php_sapi_name() === 'cli' && function_exists('xdebug_get_headers')) {
-                /** @noinspection PhpComposerExtensionStubsInspection */
                 $headers = xdebug_get_headers();
             } else {
                 $headers = headers_list();
@@ -77,7 +76,7 @@
 
         /**
          * @param string $header an header name (case insensitive)
-         * @param string $defaultValue a default value
+         * @param string|null $defaultValue a default value
          * @return string the value associated with the given header name, or the default value
          * @throws \LogicException if an header with the given name cannot be found and the default value is null
          * @see RequestHeaderUtils::opt()
@@ -225,7 +224,7 @@
         /**
          * Removes from the given header the specified values, treating the existing header as a comma separated list.
          * @param string $header the header name
-         * @param bool $caseSensitive whether to use case sensitive or insensitive comparision
+         * @param bool $caseSensitive whether to use case sensitive or insensitive comparison
          * @param string ...$values the values to remove. If none passed, the function does nothing.
          * @return string[] an array of actually removed headers (with duplicates)
          * @throws \LogicException if headers have already been sent

@@ -12,7 +12,7 @@
     "minimum-stability": "stable",
     "require": {
         "femastudios/enums": "^1",
-        "php": "^7.3",
+        "php": ">=7.3",
         "ext-json": "*"
     },
     "require-dev": {
